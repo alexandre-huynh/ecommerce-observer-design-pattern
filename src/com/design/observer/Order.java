@@ -17,20 +17,41 @@ public class Order {
         this.id = id;
     }
 
-    public void addObserver(OrderObserver observer) {
-        // TODO To implement
+    public void attach(OrderObserver observer) {
+        observers.add(observer);
     }
 
-    public void removeObserver(OrderObserver observer) {
-        // TODO To implement
+    public void detach(OrderObserver observer) {
+        observers.remove(observer);
     }
 
+    // When an order is updated, two monitors:
+    // - a Price monitor
+    // - a Quantity monitor
+    // get notified and perform the following action
     public void notifyObservers() {
-        // TODO To implement
+        for (OrderObserver observer : observers) {
+            observer.update(this);
+        }
     }
 
     public void addItem(double price) {
-        // TODO To implement
+        itemCost = price;
+        itemCount++;
+
+        totalPrice += price;
+
+        // Update totalPrice/shippingCost
+        notifyObservers();
+
+        System.out.println(
+            "Item added: $" + price +
+            " | Item cost : " + itemCost +
+            " | Item count: " + itemCount +
+            " | Total: $" + totalPrice +
+            " | Total + Shipping cost: $" + this.getRealTotalPrice() +
+            "\n"
+        );
     }
 
     public String getId() {
@@ -49,8 +70,32 @@ public class Order {
         return totalPrice;
     }
 
+    // Total price with shipping cost accounted in
+    public double getRealTotalPrice() {
+        return totalPrice + shippingCost;
+    }
+
     public double getShippingCost() {
         return shippingCost;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setItemCount(int itemCount) {
+        this.itemCount = itemCount;
+    }
+
+    public void setItemCost(double itemCost) {
+        this.itemCost = itemCost;
+    }
+
+    public void setShippingCost(double shippingCost) {
+        this.shippingCost = shippingCost;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 }
